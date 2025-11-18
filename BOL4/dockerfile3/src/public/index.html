@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Multi-Stage Web App</title>
+</head>
+<body>
+  <h1>Multi-Stage Docker Example</h1>
+  <p id="msg"></p>
+  <script>
+    fetch('/api/message')
+      .then(res => res.json())
+      .then(data => document.getElementById('msg').textContent = data.message)
+  </script>
+</body>
+</html>
