@@ -55,3 +55,13 @@ docker run -d -p 3000:3000 ahmetcan/myapp1:latest
 	2.	Tag → docker tag myapp1 <username>/myapp1:latest
 	3.	Push → docker push <username>/myapp1:latest
 
+
+# TEMİZLİK
+docker stop <container_id_or_name>
+docker rm <container_id_or_name>
+
+docker rmi myapp1
+docker rmi ahmetcan/myapp1:latest
+
+docker system prune -a
+

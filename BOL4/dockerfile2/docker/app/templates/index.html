@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Logs App</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Logs App</h1>
+        <p>Cluster'daki namespace ve objeleri listeleyin.</p>
+        <form id="namespace-form">
+            <label for="namespace">Namespace Seç:</label>
+            <input type="text" id="namespace" name="namespace" placeholder="default" required>
+            <button type="submit">Göster</button>
+        </form>
+        <div id="output"></div>
+    </div>
+    <script>
+        document.getElementById('namespace-form').addEventListener('submit', function (e) {
+            e.preventDefault();
+            const namespace = document.getElementById('namespace').value;
+            fetch(`/pods/${namespace}`)
+                .then(response => response.json())
+                .then(data => {
+                    const output = document.getElementById('output');
+                    output.innerHTML = `<pre>${JSON.stringify(data, null, 2)}</pre>`;
+                });
+        });
+    </script>
+</body>
+</html>
