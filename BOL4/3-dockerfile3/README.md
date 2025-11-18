@@ -74,6 +74,22 @@ docker run -d -p 4000:4000 --env-file .env ahmetcan/multistage-app:latest
 	•	Eğer .env yoksa direkt ENV ile de verebilir: 
 docker run -d -p 3000:4000 -e PORT=4000 -e WELCOME_MESSAGE="Merhaba Docker!" ahmetcan/multistage-app:latest
 
+
+
+# LOCAL DE İMAJ TAG i değiştir VERSİYONLA
+docker tag multistage-app ahmetcan/multistage-app:1.1
+
+>	•	multistage-app → local’de build ettiğin imajın adı
+>	•	ahmetcan/multistage-app:1.1 → Docker Hub’daki yeni hedef tag
+
+PUSH:
+docker push ahmetcan/multistage-app:1.1
+
+>Eğer imajı her build ettiğinde otomatik yeni bir tag vermek istiyorsan build aşamasında direkt tagli şekilde de yapabilirsin:
+
+docker build -t ahmetcan/multistage-app:1.1 .
+
+
 # TEMİZLİK
 docker stop <container_id_or_name>
 docker rm <container_id_or_name>
