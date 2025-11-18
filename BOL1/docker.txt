@@ -1,0 +1,67 @@
+Docker ve Container Teknolojisi: Tarihçe, Kavramlar ve Kullanım Rehberi
+
+1. Sanallaştırma ve Container Nedir?
+
+Sanallaştırma, bir fiziksel bilgisayarı veya sunucuyu birden fazla sanal makine (VM) olarak çalıştırma teknolojisidir. Sanallaştırmanın temel amacı, donanımı daha verimli kullanmak ve uygulamaları izole bir ortamda çalıştırmaktır.
+
+Virtual Machine (VM) Nedir?
+	•	VM, fiziksel bir sunucu üzerinde çalışan tam donanım emülasyonudur.
+	•	Her VM kendi işletim sistemine (OS) sahiptir ve hipervizör adı verilen bir yazılım tarafından yönetilir.
+	•	Avantaj: Tam izolasyon ve güvenlik
+	•	Dezavantaj: Ağırdır, yüksek kaynak kullanır, başlatma süresi uzundur.
+
+Container Nedir?
+	•	Container, VM gibi izole bir ortam sağlar ancak host OS’in çekirdeğini paylaşır.
+	•	Uygulamayı ve gerekli tüm bağımlılıkları paketler.
+	•	Avantaj: Hafif, hızlı başlar, daha az kaynak tüketir.
+	•	Özetle: VM bir “tam bilgisayar”, container ise “hafif bir paket” gibidir.
+
+⸻
+
+2. Docker Nedir?
+
+Docker, container teknolojisini basitleştiren ve yaygınlaştıran açık kaynak bir platformdur.
+	•	Docker ile uygulamaları taşınabilir, hızlı ve güvenli bir şekilde paketleyebilirsin.
+	•	Docker, imajlar (images) ve container’lar üzerinden çalışır.
+
+Docker Tarihçesi
+	•	2013 yılında Solomon Hykes tarafından dotCloud şirketinde geliştirildi.
+	•	Hedef: Geliştiricilerin uygulamaları her ortamda aynı şekilde çalıştırabilmesini sağlamak.
+	•	O günden bu yana Docker, hem geliştirme hem üretim ortamlarında endüstri standardı haline geldi.
+
+⸻
+
+3. Docker Temel Kavramlar
+
+Docker Image (İmaj) Nedir?
+	•	Image, bir container’ı çalıştırmak için gereken statik şablondur.
+	•	İçinde uygulama kodu, bağımlılıklar, kütüphaneler ve gerekli işletim sistemi bileşenleri vardır.
+	•	Image değişmez; sadece container’dan başlatılır.
+
+Docker Container Nedir?
+	•	Container, bir imajın çalışan örneğidir.
+	•	İzole bir ortamda çalışır, CPU ve RAM kullanır.
+	•	Container durdurulabilir, başlatılabilir ve silinebilir.
+
+
+4. Docker Hub Nedir?
+	•	Docker Hub, Docker imajlarının paylaşıldığı ve saklandığı bulut servisidir.
+	•	Kullanıcılar kendi imajlarını push/pull yapabilir.
+	•	Popüler hazır imajlar (nginx, node, python) da Docker Hub üzerinden erişilebilir.
+
+5. Docker’ı Kullanmanın Avantajları
+	1.	Taşınabilirlik: Aynı imajı farklı makinelerde veya bulutlarda çalıştırabilirsin.
+	2.	Hız: Hafif yapısı sayesinde container’lar saniyeler içinde başlar.
+	3.	Kaynak Verimliliği: Birden fazla container aynı host üzerinde rahatça çalışabilir.
+	4.	Kolay Yönetim: Docker CLI ve Docker Compose ile container’ları kolayca yönetebilirsin.
+	5.	Geliştirici Dostu: Uygulama bağımlılıklarını ve ortamını kolayca paketleyebilirsin.
+
+⸻
+
+6. Özet
+
+Docker, modern yazılım geliştirme ve dağıtım süreçlerinde hayati öneme sahip bir araçtır.
+	•	VM’ler tam izolasyon sunarken ağırdır, container’lar ise hafif ve hızlıdır.
+	•	Docker imajları değişmez blueprint’lerdir, container’lar ise çalışan örneklerdir.
+	•	Docker Hub sayesinde uygulamalarını paylaşabilir ve diğer imajları kullanabilirsin.
+	•	Container tabanlı geliştirme, özellikle mikroservis ve bulut tabanlı projelerde standart hâline gelmiştir.
