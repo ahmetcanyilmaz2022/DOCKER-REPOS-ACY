@@ -1,0 +1,77 @@
+services:
+
+  web:
+    image: nginx
+    container_name: demo-web2
+    ports:
+      - "8080:80"
+    volumes:
+      - ./app:/usr/share/nginx/html
+      - ./app/default.conf:/etc/nginx/conf.d/default.conf
+    networks:
+      - frontend
+    depends_on:
+      - api
+
+  api:
+    build: ./api
+    container_name: demo-api
+    working_dir: /app
+    volumes:
+      - ./api:/app
+      - api_node_modules:/app/node_modules   # node_modules için ayrı volume
+    ports:
+      - "3000:3000"
+    environment:
+      DB_HOST: db
+      DB_USER: root
+      DB_PASSWORD: "1234"
+      DB_NAME: demo
+    networks:
+      - backend
+      - frontend
+    depends_on:
+      db:
+        condition: service_healthy   # DB hazır olana kadar bekle
+    restart: unless-stopped          # API çökerse yeniden başlat
+
+  db:
+    image: mysql:8
+    container_name: demo-db
+    environment:
+      MYSQL_ROOT_PASSWORD: "1234"
+      MYSQL_DATABASE: "demo"
+    volumes:
+      - dbdata:/var/lib/mysql
+    networks:
+      - backend
+      - frontend
+    healthcheck:                   # DB’nin hazır olup olmadığını kontrol eder
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: demo-pma
+    platform: linux/amd64
+    environment:
+      PMA_HOST: db
+      PMA_PORT: 3306
+    ports:
+      - "8081:80"
+    networks:
+      - backend
+    depends_on:
+      - db
+
+volumes:
+  dbdata:
+  api_node_modules:
+
+networks:
+  frontend:
+    driver: bridge
+  backend:
+    driver: bridge

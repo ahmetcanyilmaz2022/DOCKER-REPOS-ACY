@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<title>Docker Compose Dashboard 🚀</title>
+<style>
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #eef2f7;
+    margin: 0;
+}
+header {
+    background: #4f46e5;
+    color: white;
+    padding: 20px;
+    text-align: center;
+}
+main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 40px 20px;
+}
+button {
+    background: #4f46e5;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 8px;
+    margin: 10px;
+    transition: 0.3s;
+}
+button:hover { background: #3730a3; }
+#api-response {
+    margin-top: 30px;
+    padding: 20px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0,0,0,0.1);
+    min-width: 300px;
+    text-align: center;
+    font-size: 18px;
+}
+.card {
+    background: white;
+    border-radius: 10px;
+    padding: 20px;
+    margin: 10px;
+    box-shadow: 0px 4px 10px rgba(0,0,0,0.1);
+    width: 300px;
+    text-align: center;
+}
+</style>
+</head>
+<body>
+<header>
+    <h1>Docker Compose Full-Stack Dashboard 🚀</h1>
+</header>
+<main>
+    <div class="card">
+        <h2>Frontend</h2>
+        <p>NGINX ile sunuluyor</p>
+    </div>
+    <div class="card">
+        <h2>Backend API</h2>
+        <p>Node.js + MySQL</p>
+        <button id="fetch-api">API’den Veri Getir</button>
+    </div>
+    <div id="api-response" class="card">Henüz veri yok</div>
+</main>
+
+<script>
+const button = document.getElementById('fetch-api');
+const responseDiv = document.getElementById('api-response');
+
+button.addEventListener('click', () => {
+    fetch('/api/users')
+        .then(res => res.json())
+        .then(data => {
+            responseDiv.textContent = "API yanıtı: " + JSON.stringify(data);
+        })
+        .catch(err => {
+            responseDiv.textContent = "API bağlantı hatası: " + err;
+        });
+});
+</script>
+</body>
+</html>

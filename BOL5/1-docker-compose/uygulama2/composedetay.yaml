@@ -1,0 +1,77 @@
+services:
+
+  web:  # Frontend: Kullanıcıya web sayfasını sunar (Nginx)
+    image: nginx                          # Nginx imajını kullanarak web container oluştur
+    container_name: demo-web2             # Container'a özel isim
+    ports:
+      - "8080:80"                         # Host 8080 → Container 80 port eşleşmesi
+    volumes:
+      - ./app:/usr/share/nginx/html       # Local ./app klasörü container içindeki HTML dizinine mount
+      - ./app/default.conf:/etc/nginx/conf.d/default.conf  # Özel nginx konfigürasyonu mount
+    networks:
+      - frontend                          # Web servisini frontend network'üne ekle
+    depends_on:
+      - api                                # Web servisi başlamadan önce API servisini bekle
+
+  api:  # Backend: API endpoint’leri sağlar ve DB ile veri alışverişi yapar
+    build: ./api                           # ./api klasöründen Dockerfile ile imaj oluştur
+    container_name: demo-api               # API container ismi
+    working_dir: /app                      # Container çalışma dizini
+    volumes:
+      - ./api:/app                         # Local ./api klasörü container içine mount
+      - api_node_modules:/app/node_modules # node_modules için ayrı volume
+    ports:
+      - "3000:3000"                        # Host 3000 → Container 3000
+    environment:                            # API’nin DB bilgileri
+      DB_HOST: db
+      DB_USER: root
+      DB_PASSWORD: "1234"
+      DB_NAME: demo
+    networks:
+      - backend
+      - frontend
+    depends_on:
+      db:
+        condition: service_healthy         # DB hazır olana kadar bekle
+    restart: unless-stopped                 # API çökerse otomatik yeniden başlat
+
+  db:  # Database: MySQL servisi, API’nin veri depolaması için kullanılır
+    image: mysql:8                          # MySQL 8 imajı
+    container_name: demo-db                 # DB container ismi
+    environment:                            # DB başlangıç ayarları
+      MYSQL_ROOT_PASSWORD: "1234"
+      MYSQL_DATABASE: "demo"
+    volumes:
+      - dbdata:/var/lib/mysql               # Veritabanı verilerini kalıcı hale getir
+    networks:
+      - backend
+      - frontend
+    healthcheck:                             # DB’nin hazır olup olmadığını kontrol et
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  phpmyadmin:  # DB Yönetimi: MySQL veritabanını görselleştirir ve yönetir
+    image: phpmyadmin/phpmyadmin            # phpMyAdmin imajı
+    container_name: demo-pma                # Container ismi
+    platform: linux/amd64                   # ARM64 vs AMD64 uyumluluk
+    environment:                             # phpMyAdmin DB bağlantısı
+      PMA_HOST: db
+      PMA_PORT: 3306
+    ports:
+      - "8081:80"                            # Host 8081 → Container 80
+    networks:
+      - backend                              # Sadece backend ile iletişim
+    depends_on:
+      - db                                   # DB çalışmadan başlamaz
+
+volumes:
+  dbdata:             # MySQL verileri için kalıcı depolama
+  api_node_modules:   # Node.js bağımlılıkları için volume
+
+networks:
+  frontend:           # Frontend servislerin network'ü
+    driver: bridge
+  backend:            # Backend servislerin network'ü
+    driver: bridge

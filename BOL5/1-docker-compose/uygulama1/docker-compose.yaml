@@ -1,0 +1,35 @@
+version: "3.9"
+
+services:
+  web:
+    image: nginx
+    container_name: demo-web
+    ports:
+      - "8080:80"
+    volumes:
+      - ./app2:/usr/share/nginx/html
+    depends_on:
+      - db
+    networks:
+      - frontend
+
+  db:
+    image: mysql:8
+    container_name: demo-db
+    environment:
+      MYSQL_ROOT_PASSWORD: "1234"
+      MYSQL_DATABASE: "demo"
+    volumes:
+      - dbdata:/var/lib/mysql
+    networks:
+      - backend
+      - frontend
+
+volumes:
+  dbdata:
+
+networks:
+  frontend:
+    driver: bridge
+  backend:
+    driver: bridge

@@ -1,0 +1,36 @@
+version: "3.9"  # Docker Compose dosyasının sürümü. V2 ve sonrası için opsiyonel ama burada belirtildi.
+
+services:  # Projedeki tüm container servislerini tanımladığımız bölüm
+
+  web:  # Web servisi (nginx)
+    image: nginx  # nginx imajını kullanarak container oluştur
+    container_name: demo-web  # Container'a özel isim ver
+    ports:  # Host ve container port eşleştirmesi
+      - "8080:80"  # Host 8080 portu → Container 80 portu
+    volumes:  # Dosya paylaşımı (host ↔ container)
+      - ./app:/usr/share/nginx/html  # Host'taki ./app klasörü container içindeki nginx html klasörüne mount edilir
+    depends_on:  # Başlangıç sırası
+      - db  # web servisi başlamadan önce db servisi çalışmalı
+    networks:  # Bu servisin dahil olduğu network(ler)
+      - frontend  # web servisi frontend network'üne dahil
+
+  db:  # Database servisi (MySQL)
+    image: mysql:8  # MySQL 8 imajını kullan
+    container_name: demo-db  # Container'a özel isim ver
+    environment:  # Container içi environment değişkenleri
+      MYSQL_ROOT_PASSWORD: "1234"  # MySQL root şifresi
+      MYSQL_DATABASE: "demo"  # Oluşturulacak başlangıç veritabanı
+    volumes:  # Veritabanı verilerini kalıcı hale getirme
+      - dbdata:/var/lib/mysql  # dbdata volume container'ın /var/lib/mysql klasörüne mount edilir
+    networks:  # Bu servisin dahil olduğu network(ler)
+      - backend  # backend network'üne dahil
+      - frontend  # frontend network'üne de dahil, böylece web servisi ile iletişim kurabilir
+
+volumes:  # Kalıcı depolama alanları
+  dbdata:  # db container’ı için volume tanımı (içerik container silinse bile kalır)
+
+networks:  # Servisler arası iletişim için özel ağlar
+  frontend:  # frontend network
+    driver: bridge  # bridge driver kullan (standart Docker ağı)
+  backend:   # backend network
+    driver: bridge  # bridge driver kullan
