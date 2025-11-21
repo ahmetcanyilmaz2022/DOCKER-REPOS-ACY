@@ -1,0 +1,23 @@
+version: "3.8"
+
+services:
+  web:
+    image: nginx:latest
+    ports:
+      - "8080:80"
+    deploy:
+      replicas: 3
+      restart_policy:
+        condition: on-failure
+
+  api:
+    image: alpine
+    command: ["sh", "-c", "while true; do echo API Çalışıyor; sleep 2; done"]
+    deploy:
+      replicas: 2
+      restart_policy:
+        condition: any
+
+networks:
+  default:
+    driver: overlay
